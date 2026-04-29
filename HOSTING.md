@@ -1,5 +1,66 @@
 # Hosting Bracket — Deployment Guide
 
+## Option A — Railway.app (recommended, no server to manage)
+
+Railway is the easiest way to run Bracket. It hosts the app and the database for you, handles
+HTTPS automatically, and gives you a free tier that is more than enough for a youth club.
+
+### 1 — Create a Railway account
+
+Go to <https://railway.app> and sign up (you can use your GitHub account).
+
+### 2 — Create a new project from this repo
+
+1. Click **New Project → Deploy from GitHub repo**.
+2. Authorise Railway to access your repo and select **youthworkerhub/brackets** (or your fork).
+3. Railway detects the `Dockerfile` and `railway.json` automatically.
+
+### 3 — Add a PostgreSQL database
+
+Inside your Railway project, click **New → Database → Add PostgreSQL**.  
+Railway adds a Postgres service and automatically injects the `DATABASE_URL` variable into your
+app — no extra config needed for the database connection.
+
+### 4 — Set environment variables
+
+In the **bracket** service → **Variables** tab, add:
+
+| Variable | Value |
+|---|---|
+| `ENVIRONMENT` | `PRODUCTION` |
+| `SERVE_FRONTEND` | `true` |
+| `API_PREFIX` | `/api` |
+| `JWT_SECRET` | A long random string — generate one with `openssl rand -hex 32` |
+| `CORS_ORIGINS` | `*` (or your Railway domain once it's assigned, e.g. `https://brackets-production.up.railway.app`) |
+
+`DATABASE_URL` is injected automatically by the Postgres service — you do **not** need to set
+`PG_DSN` manually.
+
+### 5 — Deploy
+
+Click **Deploy**. Railway builds the Docker image, runs database migrations, and gives you a
+public HTTPS URL (e.g. `https://brackets-production.up.railway.app`).
+
+Default login — **change these immediately after first login**:
+
+| Field | Value |
+|---|---|
+| Email | `test@example.org` |
+| Password | `aeGhoe1ahng2Aezai0Dei6Aih6dieHoo` |
+
+### Keeping the app updated
+
+Push a new commit to the GitHub repo. Railway redeploys automatically.
+
+### Backups
+
+Railway's Postgres add-on includes daily backups on paid plans. On the free tier, export
+manually: open the Postgres service → **Data** tab → **Export**.
+
+---
+
+## Option B — Hostinger KVM VPS (self-hosted)
+
 > **Important note about Hostinger plans**
 >
 > The Bracket app is built with **Python (FastAPI)** and **PostgreSQL**. It needs a server
