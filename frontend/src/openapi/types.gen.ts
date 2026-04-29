@@ -1483,6 +1483,10 @@ export type Tournament = {
    */
   start_time: string;
   status: TournamentStatus;
+  /**
+   * Registration Enabled
+   */
+  registration_enabled: boolean;
 };
 
 /**
@@ -1525,6 +1529,10 @@ export type TournamentBody = {
    * Start Time
    */
   start_time: string;
+  /**
+   * Registration Enabled
+   */
+  registration_enabled: boolean;
 };
 
 /**
@@ -1582,6 +1590,10 @@ export type TournamentUpdateBody = {
    * Start Time
    */
   start_time: string;
+  /**
+   * Registration Enabled
+   */
+  registration_enabled: boolean;
 };
 
 /**

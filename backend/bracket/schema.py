@@ -40,6 +40,7 @@ tournaments = Table(
         server_default="OPEN",
         index=True,
     ),
+    Column("registration_enabled", Boolean, nullable=False, server_default="f"),
 )
 
 stages = Table(

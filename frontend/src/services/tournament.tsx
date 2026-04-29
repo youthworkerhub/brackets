@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
-import { createAxios, handleRequestError } from './adapter';
+import axios from 'axios';
+import { createAxios, getBaseApiUrl, handleRequestError } from './adapter';
 
 export async function createTournament(
   club_id: number,
@@ -10,7 +11,8 @@ export async function createTournament(
   auto_assign_courts: boolean,
   start_time: Dayjs,
   duration_minutes: number,
-  margin_minutes: number
+  margin_minutes: number,
+  registration_enabled: boolean = false
 ) {
   return createAxios()
     .post('tournaments', {
@@ -23,6 +25,7 @@ export async function createTournament(
       start_time,
       duration_minutes,
       margin_minutes,
+      registration_enabled,
     })
     .catch((response: any) => handleRequestError(response));
 }
@@ -48,7 +51,8 @@ export async function updateTournament(
   auto_assign_courts: boolean,
   start_time: string,
   duration_minutes: number,
-  margin_minutes: number
+  margin_minutes: number,
+  registration_enabled: boolean = false
 ) {
   return createAxios()
     .put(`tournaments/${tournament_id}`, {
@@ -60,6 +64,15 @@ export async function updateTournament(
       start_time,
       duration_minutes,
       margin_minutes,
+      registration_enabled,
     })
     .catch((response: any) => handleRequestError(response));
+}
+
+export async function registerForTournament(tournament_id: number, name: string) {
+  return axios
+    .post(`${getBaseApiUrl()}/tournaments/${tournament_id}/register`, { name })
+    .catch((response: any) => {
+      throw response;
+    });
 }
