@@ -1,7 +1,6 @@
 """add registration_enabled to tournaments
 
-Revision ID: a1b2c3d4e5f6
-Revises: fa53e635f410
+Revises: c1ab44651e79
 Create Date: 2026-04-29 12:00:00.000000
 
 """
@@ -11,7 +10,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str | None = "a1b2c3d4e5f6"
-down_revision: str | None = "fa53e635f410"
+down_revision: str | None = "c1ab44651e79"
 branch_labels: str | None = None
 depends_on: str | None = None
 
