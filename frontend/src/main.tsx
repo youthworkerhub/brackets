@@ -20,6 +20,7 @@ import CreateAccountPage from './pages/create_account';
 import CreateDemoAccountPage from './pages/demo';
 import LoginPage from './pages/login';
 import PasswordResetPage from './pages/password_reset';
+import RegisterPage from './pages/register/[tournament_id]';
 import DashboardSchedulePage from './pages/tournaments/[id]/dashboard';
 import DashboardNotFoundPage from './pages/tournaments/[id]/dashboard/dashboard_404';
 import CourtsPresentPage from './pages/tournaments/[id]/dashboard/present/courts';
@@ -81,6 +82,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/user" element={<UserPage />} />
               <Route path="/password-reset" element={<PasswordResetPage />} />
               <Route path="/create-account" element={<CreateAccountPage />} />
+              <Route path="/register/:tournament_id" element={<RegisterPage />} />
 
               <Route path="/tournaments">
                 <Route path=":id">

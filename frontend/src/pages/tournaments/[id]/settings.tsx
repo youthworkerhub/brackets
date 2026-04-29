@@ -18,11 +18,12 @@ import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { MdDelete } from '@react-icons/all-files/md/MdDelete';
 import { MdUnarchive } from '@react-icons/all-files/md/MdUnarchive';
-import { IconCalendar, IconCalendarTime, IconCopy, IconPencil } from '@tabler/icons-react';
+import { IconCalendar, IconCalendarTime, IconCopy, IconDownload, IconPencil } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { MdArchive } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import { SWRResponse } from 'swr';
+import QRCode from 'react-qr-code';
 
 import { assert_not_none } from '@components/utils/assert';
 import { DropzoneButton } from '@components/utils/file_upload';
@@ -136,6 +137,7 @@ function GeneralTournamentForm({
       auto_assign_courts: tournament.auto_assign_courts,
       duration_minutes: tournament.duration_minutes,
       margin_minutes: tournament.margin_minutes,
+      registration_enabled: tournament.registration_enabled,
     },
 
     validate: {
@@ -148,6 +150,28 @@ function GeneralTournamentForm({
         value != null && value > 0 ? null : t('margin_minutes_choose_title'),
     },
   });
+
+  const registrationUrl = `${getBaseURL()}/register/${tournament.id}`;
+
+  function downloadQRCode() {
+    const svg = document.getElementById('registration-qr-code');
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new window.Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx?.drawImage(img, 0, 0);
+      const pngFile = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.download = `registration-qr-${tournament.id}.png`;
+      downloadLink.href = pngFile;
+      downloadLink.click();
+    };
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+  }
 
   return (
     <form
@@ -163,7 +187,8 @@ function GeneralTournamentForm({
           values.auto_assign_courts,
           values.start_time.toISOString(),
           values.duration_minutes,
-          values.margin_minutes
+          values.margin_minutes,
+          values.registration_enabled
         );
 
         await swrTournamentResponse.mutate();
@@ -294,6 +319,53 @@ function GeneralTournamentForm({
           label={t('auto_assign_courts_label')}
           {...form.getInputProps('auto_assign_courts', { type: 'checkbox' })}
         />
+      </Fieldset>
+
+      <Fieldset legend={t('registration_settings_title')} mt="lg" radius="md">
+        <Text fz="sm">{t('registration_settings_description')}</Text>
+        <Checkbox
+          mt="md"
+          label={t('registration_enabled_label')}
+          {...form.getInputProps('registration_enabled', { type: 'checkbox' })}
+        />
+        {form.values.registration_enabled && (
+          <>
+            <Grid mt="md" align="center">
+              <Grid.Col span={{ sm: 9 }}>
+                <TextInput
+                  label={t('registration_link_label')}
+                  value={registrationUrl}
+                  readOnly
+                />
+              </Grid.Col>
+              <Grid.Col span={{ sm: 3 }}>
+                <CopyButton value={registrationUrl}>
+                  {({ copied, copy }) => (
+                    <Button
+                      leftSection={<IconCopy size="1.1rem" stroke={1.5} />}
+                      fullWidth
+                      mt="xl"
+                      color={copied ? 'teal' : 'indigo'}
+                      onClick={copy}
+                    >
+                      {copied ? t('copied_url_button') : t('copy_url_button')}
+                    </Button>
+                  )}
+                </CopyButton>
+              </Grid.Col>
+            </Grid>
+            <Center mt="lg" style={{ flexDirection: 'column', gap: '1rem' }}>
+              <QRCode id="registration-qr-code" value={registrationUrl} size={200} />
+              <Button
+                variant="outline"
+                leftSection={<IconDownload size="1.1rem" stroke={1.5} />}
+                onClick={downloadQRCode}
+              >
+                {t('download_qr_code_button')}
+              </Button>
+            </Center>
+          </>
+        )}
       </Fieldset>
 
       <Button

@@ -42,6 +42,7 @@ async def test_tournaments_endpoint(
                 "duration_minutes": 10,
                 "margin_minutes": 5,
                 "status": "OPEN",
+                "registration_enabled": False,
             }
         ],
     }
@@ -68,6 +69,7 @@ async def test_tournament_endpoint(
             "duration_minutes": 10,
             "margin_minutes": 5,
             "status": "OPEN",
+            "registration_enabled": False,
         },
     }
 

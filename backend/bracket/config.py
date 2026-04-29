@@ -2,10 +2,10 @@ import logging
 import os
 import sys
 from enum import auto
-from typing import Annotated
+from typing import Annotated, Any
 
 import sentry_sdk
-from pydantic import Field, PostgresDsn
+from pydantic import Field, PostgresDsn, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from bracket.utils.types import EnumAutoStr
@@ -39,9 +39,18 @@ class Config(BaseSettings):
     jwt_secret: str
     auto_run_migrations: bool = True
     pg_dsn: PostgresDsn = PostgresDsn("postgresql://user:pass@localhost:5432/db")
+    database_url: str | None = None
     sentry_dsn: str | None = None
     serve_frontend: bool = False
     api_prefix: str = ""
+
+    @model_validator(mode="before")
+    @classmethod
+    def use_database_url_fallback(cls, data: Any) -> Any:
+        # Railway's Postgres plugin injects DATABASE_URL. Use it when PG_DSN is not set.
+        if isinstance(data, dict) and not data.get("pg_dsn") and data.get("database_url"):
+            data["pg_dsn"] = data["database_url"]
+        return data
 
     def is_cors_enabled(self) -> bool:
         return self.cors_origins != "*"
