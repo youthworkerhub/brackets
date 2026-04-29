@@ -73,6 +73,7 @@ export async function registerForTournament(tournament_id: number, name: string)
   return axios
     .post(`${getBaseApiUrl()}/tournaments/${tournament_id}/register`, { name })
     .catch((response: any) => {
+      handleRequestError(response);
       throw response;
     });
 }
