@@ -35,7 +35,8 @@ EXPOSE 8400
 HEALTHCHECK --interval=3s --timeout=5s --retries=10 \
     CMD wget -O /dev/null "http://0.0.0.0:${PORT:-8400}/ping"
 
-CMD gunicorn \
+CMD uv run --no-dev --locked -- \
+    gunicorn \
     -k uvicorn.workers.UvicornWorker \
     bracket.app:app \
     --bind "0.0.0.0:${PORT:-8400}" \
