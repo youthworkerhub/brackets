@@ -1,5 +1,6 @@
 """add registration_enabled to tournaments
 
+Revision ID: a1b2c3d4e5f6
 Revises: c1ab44651e79
 Create Date: 2026-04-29 12:00:00.000000
 
