@@ -274,6 +274,7 @@
     "registration_enabled_label": "Allow public sign-ups for this tournament",
     "registration_link_label": "Registration link",
     "download_qr_code_button": "Download QR Code (PNG)",
+    "download_dashboard_qr_button": "Download Dashboard QR (PNG)",
     "registration_page_title": "Sign Up for Tournament",
     "registration_tournament_starts": "Starts:",
     "registration_name_label": "Your name",
