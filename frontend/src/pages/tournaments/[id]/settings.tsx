@@ -152,6 +152,7 @@ function GeneralTournamentForm({
   });
 
   const registrationUrl = `${getBaseURL()}/register/${tournament.id}`;
+  const dashboardUrl = `${getBaseURL()}/tournaments/${tournament.dashboard_endpoint}/dashboard`;
 
   function downloadQRCode() {
     const svg = document.getElementById('registration-qr-code');
@@ -167,6 +168,26 @@ function GeneralTournamentForm({
       const pngFile = canvas.toDataURL('image/png');
       const downloadLink = document.createElement('a');
       downloadLink.download = `registration-qr-${tournament.id}.png`;
+      downloadLink.href = pngFile;
+      downloadLink.click();
+    };
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+  }
+
+  function downloadDashboardQRCode() {
+    const svg = document.getElementById('dashboard-qr-code');
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new window.Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx?.drawImage(img, 0, 0);
+      const pngFile = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.download = `dashboard-qr-${tournament.id}.png`;
       downloadLink.href = pngFile;
       downloadLink.click();
     };
@@ -280,6 +301,22 @@ function GeneralTournamentForm({
             </CopyButton>
           </Grid.Col>
         </Grid>
+
+        <Center mt="lg" style={{ flexDirection: 'column', gap: '1rem' }}>
+          <QRCode
+            id="dashboard-qr-code"
+            value={dashboardUrl}
+            size={200}
+          />
+          <Button
+            variant="outline"
+            disabled={form.values.dashboard_endpoint === ''}
+            leftSection={<IconDownload size="1.1rem" stroke={1.5} />}
+            onClick={downloadDashboardQRCode}
+          >
+            {t('download_dashboard_qr_button')}
+          </Button>
+        </Center>
 
         <Checkbox
           mt="lg"
