@@ -152,7 +152,9 @@ function GeneralTournamentForm({
   });
 
   const registrationUrl = `${getBaseURL()}/register/${tournament.id}`;
-  const dashboardUrl = `${getBaseURL()}/tournaments/${tournament.dashboard_endpoint}/dashboard`;
+  const dashboardUrl = tournament.dashboard_endpoint
+    ? `${getBaseURL()}/tournaments/${tournament.dashboard_endpoint}/dashboard`
+    : '';
 
   function downloadQRCode() {
     const svg = document.getElementById('registration-qr-code');
