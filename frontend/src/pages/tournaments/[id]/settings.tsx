@@ -152,8 +152,8 @@ function GeneralTournamentForm({
   });
 
   const registrationUrl = `${getBaseURL()}/register/${tournament.id}`;
-  const dashboardUrl = tournament.dashboard_endpoint
-    ? `${getBaseURL()}/tournaments/${tournament.dashboard_endpoint}/dashboard`
+  const dashboardUrl = form.values.dashboard_endpoint
+    ? `${getBaseURL()}/tournaments/${form.values.dashboard_endpoint}/dashboard`
     : '';
 
   function downloadQRCode() {
@@ -304,7 +304,7 @@ function GeneralTournamentForm({
           </Grid.Col>
         </Grid>
 
-        {form.values.dashboard_endpoint !== '' && (
+        {form.values.dashboard_endpoint && (
           <Center mt="lg" style={{ flexDirection: 'column', gap: '1rem' }}>
             <QRCode
               id="dashboard-qr-code"
