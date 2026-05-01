@@ -302,21 +302,22 @@ function GeneralTournamentForm({
           </Grid.Col>
         </Grid>
 
-        <Center mt="lg" style={{ flexDirection: 'column', gap: '1rem' }}>
-          <QRCode
-            id="dashboard-qr-code"
-            value={dashboardUrl}
-            size={200}
-          />
-          <Button
-            variant="outline"
-            disabled={form.values.dashboard_endpoint === ''}
-            leftSection={<IconDownload size="1.1rem" stroke={1.5} />}
-            onClick={downloadDashboardQRCode}
-          >
-            {t('download_dashboard_qr_button')}
-          </Button>
-        </Center>
+        {form.values.dashboard_endpoint !== '' && (
+          <Center mt="lg" style={{ flexDirection: 'column', gap: '1rem' }}>
+            <QRCode
+              id="dashboard-qr-code"
+              value={dashboardUrl}
+              size={200}
+            />
+            <Button
+              variant="outline"
+              leftSection={<IconDownload size="1.1rem" stroke={1.5} />}
+              onClick={downloadDashboardQRCode}
+            >
+              {t('download_dashboard_qr_button')}
+            </Button>
+          </Center>
+        )}
 
         <Checkbox
           mt="lg"
